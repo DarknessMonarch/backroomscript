@@ -1,0 +1,408 @@
+@media screen {
+  .wrapper {
+    width: 100%;
+    padding: 4rem 1.5rem;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 250, 245, 0.4) 0%,
+      rgba(255, 245, 250, 0.4) 100%
+    );
+    display: flex;
+    flex-direction: column;
+    gap: 6rem;
+  }
+
+  /* ===========================
+     TESTIMONIALS SECTION
+     =========================== */
+
+  .testimonialsContainer {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .headerContainer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .titleWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .decorativeLine {
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: 2px;
+  }
+
+  .sectionTitle {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--dark-color);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .highlight {
+    color: var(--primary-color);
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: var(--warm-gray);
+    line-height: 1.7;
+    max-width: 700px;
+    margin: 0;
+  }
+
+  .testimonialsController {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .navButton {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .navButton:hover:not(.disabled) {
+    background: var(--primary-color);
+  }
+
+  .navButton:hover:not(.disabled) .navBtnIcon {
+    color: var(--light-color);
+  }
+
+  .navButton.disabled {
+    border: 2px solid #e0e0e0;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .navBtnIcon {
+    font-size: 24px;
+    color: var(--primary-color);
+    transition: color 0.3s ease;
+  }
+
+  .navButton.disabled .navBtnIcon {
+    color: #999;
+  }
+
+  .testimonialsGrid {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 1rem;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .testimonialsGrid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .testimonialCard {
+    min-width: 320px;
+    max-width: 320px;
+    background: var(--glass-bg-medium);
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
+    border: 1px solid rgba(236, 72, 153, 0.1);
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--glass-shadow-sm);
+  }
+
+  .testimonialCard:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--glass-shadow-lg);
+    border-color: rgba(236, 72, 153, 0.2);
+  }
+
+  .cardContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+  }
+
+  .quoteIcon {
+    font-size: 3rem;
+    color: var(--primary-color);
+    font-family: Georgia, serif;
+    line-height: 1;
+    opacity: 0.3;
+  }
+
+  .testimonialText {
+    font-size: 0.95rem;
+    color: #333;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .rating {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: auto;
+  }
+
+  .starIcon {
+    font-size: 1.125rem;
+    color: var(--gold-color);
+  }
+
+  .userInfo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(236, 72, 153, 0.1);
+  }
+
+  .avatarCircle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--light-color);
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+  }
+
+  .userDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .userName {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark-color);
+  }
+
+  .userRole {
+    font-size: 0.875rem;
+    color: var(--warm-gray);
+  }
+
+  .emptyState {
+    width: 100%;
+    padding: 4rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .emptyText {
+    font-size: 1.125rem;
+    color: var(--warm-gray);
+    margin: 0;
+    max-width: 500px;
+  }
+
+  /* ===========================
+     FAQ SECTION
+     =========================== */
+
+  .faqContainer {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .faqHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .faqSubtitle {
+    font-size: 1rem;
+    color: var(--warm-gray);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .faqList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .faqItem {
+    background: var(--glass-bg-medium);
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
+    border: 1px solid rgba(236, 72, 153, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .faqItem:hover {
+    box-shadow: var(--glass-shadow-md);
+    border-color: rgba(236, 72, 153, 0.2);
+  }
+
+  .faqQuestion {
+    width: 100%;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.3s ease;
+  }
+
+  .faqQuestion:hover {
+    background: rgba(236, 72, 153, 0.03);
+  }
+
+  .questionText {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    flex: 1;
+    line-height: 1.5;
+  }
+
+  .faqIcon {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .faqItem:hover .faqIcon {
+    transform: scale(1.1);
+  }
+
+  .faqAnswer {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .answerText {
+    font-size: 0.95rem;
+    color: var(--warm-gray);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* ===========================
+   TABLET STYLES (768px+)
+   =========================== */
+
+@media only screen and (min-width: 48em) {
+  .wrapper {
+    padding: 6rem 2rem;
+  }
+
+  .sectionTitle {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.125rem;
+  }
+
+  .testimonialCard {
+    min-width: 360px;
+    max-width: 360px;
+  }
+
+  .navButton {
+    width: 48px;
+    height: 48px;
+  }
+
+  .navBtnIcon {
+    font-size: 28px;
+  }
+
+  .faqSubtitle {
+    font-size: 1.125rem;
+  }
+}
+
+/* ===========================
+   DESKTOP STYLES (1024px+)
+   =========================== */
+
+@media only screen and (min-width: 64em) {
+  .sectionTitle {
+    font-size: 3rem;
+  }
+
+  .testimonialCard {
+    min-width: 380px;
+    max-width: 380px;
+    padding: 2.5rem;
+  }
+
+  .testimonialText {
+    font-size: 1rem;
+  }
+
+  .questionText {
+    font-size: 1.125rem;
+  }
+
+  .answerText {
+    font-size: 1rem;
+  }
+}

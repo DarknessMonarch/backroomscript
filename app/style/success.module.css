@@ -1,0 +1,150 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: #6b7280;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6b7280;
+  font-size: 1.125rem;
+}
+
+.storiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 80px;
+}
+
+.storyCard {
+  background: white;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 2px solid #f3f4f6;
+  transition: all 0.3s ease;
+}
+
+.storyCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+  border-color: #ec4899;
+}
+
+.storyIcon {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.storyTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+.storyText {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #4b5563;
+  font-style: italic;
+  margin-bottom: 24px;
+}
+
+.storyFooter {
+  border-top: 1px solid #f3f4f6;
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.storyName {
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.storyTier {
+  font-size: 0.875rem;
+  color: #ec4899;
+  background: rgba(236, 72, 153, 0.1);
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+.cta {
+  text-align: center;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+  border-radius: 20px;
+  padding: 60px 40px;
+}
+
+.cta h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 24px;
+}
+
+.ctaButton {
+  display: inline-block;
+  padding: 16px 48px;
+  background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.ctaButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(236, 72, 153, 0.3);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 40px 16px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .storiesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta {
+    padding: 40px 20px;
+  }
+
+  .cta h2 {
+    font-size: 1.5rem;
+  }
+}
