@@ -1,4 +1,4 @@
-const SITE_URL = "http://backroomscript.com";
+const SITE_URL = "https://backroomscript.com";
 
 export const metadata = {
   title: "Dashboard - Your Conversation Templates",

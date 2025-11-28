@@ -1,4 +1,4 @@
-const SITE_URL = "http://backroomscript.com";
+const SITE_URL = "https://backroomscript.com";
 const BANNER_URL = "https://raw.githubusercontent.com/DarknessMonarch/backroomscript/refs/heads/master/public/assets/banner.png";
 
 export const metadata = {

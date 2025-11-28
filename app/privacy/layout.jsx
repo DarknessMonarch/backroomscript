@@ -1,4 +1,4 @@
-const SITE_URL = "http://backroomscript.com";
+const SITE_URL = "https://backroomscript.com";
 
 export const metadata = {
   title: "Privacy Policy - How We Protect Your Data",

@@ -1,5 +1,5 @@
 export default async function sitemap() {
-  const baseUrl = "http://backroomscript.com";
+  const baseUrl = "https://backroomscript.com";
 
   const mainRoutes = [
     {

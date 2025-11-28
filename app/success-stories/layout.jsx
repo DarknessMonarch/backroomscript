@@ -1,4 +1,4 @@
-const SITE_URL = "http://backroomscript.com";
+const SITE_URL = "https://backroomscript.com";
 const SUCCESS_IMAGE_URL = `${SITE_URL}/assets/successWoman.png`;
 
 export const metadata = {
