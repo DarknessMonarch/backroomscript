@@ -1,44 +1,63 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/app/store/AuthStore";
 import { useTemplateStore } from "@/app/store/TemplateStore";
 import { useSubscriptionStore } from "@/app/store/SubscriptionStore";
-import ProfilePicture from "@/app/components/ProfilePicture";
-import SuccessStorySubmission from "@/app/components/SuccessStorySubmission";
-import styles from "@/app/style/dashboard.module.css";
 import { toast } from "sonner";
 
+// Components
+import Sidebar from "@/app/components/Sidebar";
+import TemplateCard from "@/app/components/TemplateCard";
+import TemplateModal from "@/app/components/TemplateModal";
+import UpgradeModal from "@/app/components/UpgradeModal";
+import CoachingSection from "@/app/components/CoachingSection";
+import SuccessStorySubmission from "@/app/components/SuccessStorySubmission";
+
+// Styles
+import styles from "@/app/style/dashboard.module.css";
+
+// Icons
 import {
-  IoSparkles as SparklesIcon,
-  IoChevronForward as ChevronIcon,
-  IoSearch as SearchIcon,
-  IoFilter as FilterIcon,
-  IoClose as CloseIcon,
-  IoBookmark as BookmarkIcon,
-  IoBookmarkOutline as BookmarkOutlineIcon,
-  IoSend as SendIcon,
-  IoTime as TimeIcon,
-  IoChatbubbles as ChatIcon,
-  IoTrophy as TrophyIcon,
-  IoRocket as RocketIcon,
-  IoLockClosed as LockIcon,
-  IoCheckmarkCircle as CheckIcon,
-  IoHeart as HeartIcon,
-  IoBusiness as BusinessIcon,
-  IoText as TextIcon,
-  IoPeople as PeopleIcon,
-  IoCalendar as CalendarIcon,
-  IoStar as StarIcon,
+  IoSparkles,
+  IoChevronForward,
+  IoSearch,
+  IoClose,
+  IoTime,
+  IoBookmark,
+  IoHeart,
+  IoBusiness,
+  IoText,
+  IoPeople,
+  IoCalendar,
 } from "react-icons/io5";
 
-import { FaCrown as CrownIcon, FaTelegram as TelegramIcon } from "react-icons/fa";
+// ==================== UTILITY COMPONENTS ====================
+
+const EmptyState = ({ icon: Icon, title, description }) => (
+  <div className={styles.emptyState}>
+    <Icon className={styles.emptyIcon} />
+    <h3>{title}</h3>
+    <p>{description}</p>
+  </div>
+);
+
+const LoadingState = ({ message = "Loading..." }) => (
+  <div className={styles.loadingContainer}>
+    <div className={styles.loader}>
+      <IoSparkles className={styles.loaderIcon} />
+      <p>{message}</p>
+    </div>
+  </div>
+);
+
+// ==================== MAIN COMPONENT ====================
 
 export default function Dashboard() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { isAuth, username, currentTier, logout } = useAuthStore();
+  const { isAuth, username, currentTier, isInitialized, initializeAuth } = useAuthStore();
 
   const {
     templates,
@@ -57,105 +76,122 @@ export default function Dashboard() {
     toggleBookmark,
   } = useTemplateStore();
 
-  const { 
-    getTierInfo,
-    getAllTiers,
-    getTierLevel,
-    initializePayment, 
-    paymentLoading,
-    verifyPayment,
-    verifyingPayment
-  } = useSubscriptionStore();
+  const tiersObject = useSubscriptionStore((state) => state.tiers);
+  const getTierInfo = useSubscriptionStore((state) => state.getTierInfo);
+  const getTierLevel = useSubscriptionStore((state) => state.getTierLevel);
+  const initializePayment = useSubscriptionStore((state) => state.initializePayment);
+  const paymentLoading = useSubscriptionStore((state) => state.paymentLoading);
+  const verifyPayment = useSubscriptionStore((state) => state.verifyPayment);
+  const verifyingPayment = useSubscriptionStore((state) => state.verifyingPayment);
+
+  const tiers = useMemo(() => Object.values(tiersObject), [tiersObject]);
 
   const [activeTab, setActiveTab] = useState("templates");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const [replyText, setReplyText] = useState("");
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradingToTier, setUpgradingToTier] = useState(null);
   const [verificationComplete, setVerificationComplete] = useState(false);
 
-  // Handle payment verification on mount
+  const currentTierInfo = getTierInfo(currentTier);
+
+  // ==================== DATA & CONFIGURATION ====================
+
+  const categories = [
+    { id: "all", label: "All Templates", icon: IoSparkles },
+    { id: "dating", label: "Dating & Flirting", icon: IoHeart },
+    { id: "business", label: "Business", icon: IoBusiness },
+    { id: "social", label: "Social", icon: IoPeople },
+    { id: "content", label: "Content", icon: IoText },
+  ];
+
+  const tabTitles = {
+    templates: "Your Templates",
+    previous: "Previous Templates",
+    bookmarks: "Bookmarked Templates",
+    coaching: "Coaching & Support",
+    "success-stories": "Success Stories",
+  };
+
+  const tabSubtitles = {
+    templates: "Master confident conversations with our expert templates",
+    previous: "Review templates you've accessed before",
+    bookmarks: "Your saved favorite templates",
+    coaching: "Get personalized guidance from our experts",
+    "success-stories": "Share your success story and inspire others",
+  };
+
+  // ==================== EFFECTS ====================
+
   useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
+
+  useEffect(() => {
+    if (!isInitialized) return;
+
     if (!isAuth) {
       router.push("/authentication/login");
       return;
     }
 
-    // Check for payment verification parameters
-    const reference = searchParams.get('reference');
-    const trxref = searchParams.get('trxref');
-    const status = searchParams.get('status');
+    const reference = searchParams.get("reference");
+    const trxref = searchParams.get("trxref");
+    const status = searchParams.get("status");
 
     if ((reference || trxref) && !verificationComplete) {
       handlePaymentVerification(reference || trxref, status);
     } else {
-      // Normal data fetch
       getAllTemplates();
       getPreviousTemplates();
       getBookmarkedTemplates();
     }
-  }, [isAuth, router, searchParams, verificationComplete]);
+  }, [isAuth, isInitialized, router, searchParams, verificationComplete]);
+
+  // ==================== HANDLERS ====================
 
   const handlePaymentVerification = async (reference, status) => {
-    if (status === 'cancelled') {
+    if (status === "cancelled") {
       toast.error("Payment was cancelled");
-      router.replace('/dashboard');
+      router.replace("/dashboard");
       return;
     }
 
-    toast.loading("Verifying your payment...", { id: 'verify-payment' });
+    toast.loading("Verifying your payment...", { id: "verify-payment" });
 
     try {
       const result = await verifyPayment(reference);
 
       if (result.success) {
-        toast.success(result.message || "Payment verified! Welcome to your new tier! 🎉", { 
-          id: 'verify-payment',
-          duration: 5000 
-        });
-        
+        toast.success(
+          result.message || "Payment verified! Welcome to your new tier! 🎉",
+          { id: "verify-payment", duration: 5000 }
+        );
+
         setVerificationComplete(true);
-        
+
         await Promise.all([
           getAllTemplates(),
           getPreviousTemplates(),
-          getBookmarkedTemplates()
+          getBookmarkedTemplates(),
         ]);
 
-        router.replace('/dashboard');
+        router.replace("/dashboard");
       } else {
-        toast.error(result.message || "Payment verification failed", { 
-          id: 'verify-payment' 
+        toast.error(result.message || "Payment verification failed", {
+          id: "verify-payment",
         });
-        router.replace('/dashboard');
+        router.replace("/dashboard");
       }
     } catch (error) {
       console.error("Payment verification error:", error);
       toast.error("Failed to verify payment. Please contact support.", {
-        id: 'verify-payment'
+        id: "verify-payment",
       });
-      router.replace('/dashboard');
+      router.replace("/dashboard");
     }
   };
-
-  const categories = [
-    { id: "all", label: "All Templates", icon: <SparklesIcon /> },
-    { id: "dating", label: "Dating & Flirting", icon: <HeartIcon /> },
-    { id: "business", label: "Business", icon: <BusinessIcon /> },
-    { id: "social", label: "Social", icon: <PeopleIcon /> },
-    { id: "content", label: "Content", icon: <TextIcon /> },
-  ];
-
-  const filteredTemplates = (templates || []).filter((template) => {
-    const matchesCategory =
-      selectedCategory === "all" || template.category === selectedCategory;
-    const matchesSearch =
-      template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      template.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
 
   const handleTemplateClick = async (template) => {
     const tierHierarchy = { starter: 0, pro: 1, elite: 2 };
@@ -170,7 +206,7 @@ export default function Dashboard() {
     if (currentTier === "starter") {
       const result = await getTemplate(template._id || template.id);
       if (!result.success) {
-        if (result.message?.includes('only 1 template')) {
+        if (result.message?.includes("only 1 template")) {
           toast.error(result.message);
           setShowUpgradeModal(true);
         } else {
@@ -206,7 +242,7 @@ export default function Dashboard() {
 
     const currentLevel = getTierLevel(currentTier);
     const targetLevel = getTierLevel(tier.id);
-    
+
     if (targetLevel < currentLevel) {
       toast.info("Please contact support to downgrade your plan");
       return;
@@ -224,149 +260,44 @@ export default function Dashboard() {
     }
   };
 
-  const handleReplySubmit = () => {
-    if (!replyText.trim()) return;
-    toast.success("Reply sent! Our team will respond within 24 hours.");
-    setReplyText("");
-  };
+  // ==================== COMPUTED VALUES ====================
 
-  const handleTelegramClick = () => {
-    window.open("https://t.me/backroomscript", "_blank");
-  };
+  const filteredTemplates = (templates || []).filter((template) => {
+    const matchesCategory =
+      selectedCategory === "all" || template.category === selectedCategory;
+    const matchesSearch =
+      template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      template.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
-  const currentTierInfo = getTierInfo(currentTier);
+  // ==================== LOADING STATES ====================
 
-  const getTierIcon = () => {
-    switch(currentTier) {
-      case "starter":
-        return <SparklesIcon />;
-      case "pro":
-        return <TrophyIcon />;
-      case "elite":
-        return <CrownIcon />;
-      default:
-        return <SparklesIcon />;
-    }
-  };
+  if (!isInitialized) {
+    return <LoadingState message="Initializing..." />;
+  }
 
   if (verifyingPayment) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loader}>
-          <SparklesIcon className={styles.loaderIcon} />
-          <p>Verifying your payment...</p>
-        </div>
-      </div>
-    );
+    return <LoadingState message="Verifying your payment..." />;
   }
 
   if (templatesLoading && !templates.length && !verificationComplete) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loader}>
-          <SparklesIcon className={styles.loaderIcon} />
-          <p>Loading your dashboard...</p>
-        </div>
-      </div>
-    );
+    return <LoadingState message="Loading your dashboard..." />;
   }
+
+  // ==================== RENDER ====================
 
   return (
     <div className={styles.dashboardContainer}>
       {/* Sidebar */}
-      <aside className={styles.sidebar}>
-        <div className={styles.sidebarHeader}>
-          <div className={styles.userProfile}>
-            <ProfilePicture />
-            <div className={styles.userInfo}>
-              <h3>{username || "Queen"}</h3>
-              <span className={styles.userTier}>{currentTierInfo.name}</span>
-            </div>
-          </div>
-        </div>
-
-        <nav className={styles.sidebarNav}>
-          <button
-            className={`${styles.navItem} ${
-              activeTab === "templates" ? styles.navItemActive : ""
-            }`}
-            onClick={() => setActiveTab("templates")}
-          >
-            <SparklesIcon />
-            <span>Templates</span>
-          </button>
-          <button
-            className={`${styles.navItem} ${
-              activeTab === "previous" ? styles.navItemActive : ""
-            } ${!currentTierInfo.limits.previousAccess ? styles.navItemLocked : ""}`}
-            onClick={() => {
-              if (!currentTierInfo.limits.previousAccess) {
-                toast.info("Upgrade to Pro to access previous templates");
-                setShowUpgradeModal(true);
-              } else {
-                setActiveTab("previous");
-              }
-            }}
-          >
-            <TimeIcon />
-            <span>Previous Templates</span>
-            {!currentTierInfo.limits.previousAccess && <LockIcon className={styles.lockIcon} />}
-          </button>
-          <button
-            className={`${styles.navItem} ${
-              activeTab === "bookmarks" ? styles.navItemActive : ""
-            } ${!currentTierInfo.limits.bookmarks ? styles.navItemLocked : ""}`}
-            onClick={() => {
-              if (!currentTierInfo.limits.bookmarks) {
-                toast.info("Upgrade to Pro to bookmark templates");
-                setShowUpgradeModal(true);
-              } else {
-                setActiveTab("bookmarks");
-              }
-            }}
-          >
-            <BookmarkIcon />
-            <span>Bookmarked</span>
-            {!currentTierInfo.limits.bookmarks && <LockIcon className={styles.lockIcon} />}
-          </button>
-          <button
-            className={`${styles.navItem} ${
-              activeTab === "coaching" ? styles.navItemActive : ""
-            } ${!currentTierInfo.limits.coaching ? styles.navItemLocked : ""}`}
-            onClick={() => {
-              if (!currentTierInfo.limits.coaching) {
-                toast.info("Upgrade to Queen Elite for coaching & support");
-                setShowUpgradeModal(true);
-              } else {
-                setActiveTab("coaching");
-              }
-            }}
-          >
-            <ChatIcon />
-            <span>Coaching & Support</span>
-            {!currentTierInfo.limits.coaching && <LockIcon className={styles.lockIcon} />}
-          </button>
-          <button
-            className={`${styles.navItem} ${
-              activeTab === "success-stories" ? styles.navItemActive : ""
-            }`}
-            onClick={() => setActiveTab("success-stories")}
-          >
-            <StarIcon />
-            <span>Success Stories</span>
-          </button>
-        </nav>
-
-        <div className={styles.sidebarFooter}>
-          <button
-            className={styles.upgradeButton}
-            onClick={() => setShowUpgradeModal(true)}
-          >
-            <RocketIcon />
-            <span>Upgrade Plan</span>
-          </button>
-        </div>
-      </aside>
+      <Sidebar
+        username={username}
+        currentTier={currentTier}
+        currentTierInfo={currentTierInfo}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onUpgradeClick={() => setShowUpgradeModal(true)}
+      />
 
       {/* Main Content */}
       <main className={styles.mainContent}>
@@ -374,21 +305,20 @@ export default function Dashboard() {
         <header className={styles.contentHeader}>
           <div className={styles.headerTop}>
             <div>
-              <h1>
-                {activeTab === "templates" && "Your Templates"}
-                {activeTab === "previous" && "Previous Templates"}
-                {activeTab === "bookmarks" && "Bookmarked Templates"}
-                {activeTab === "coaching" && "Coaching & Support"}
-                {activeTab === "success-stories" && "Success Stories"}
-              </h1>
+              <h1>{tabTitles[activeTab]}</h1>
               <p className={styles.headerSubtitle}>
-                {activeTab === "templates" && (
-                  <>
-                    Master confident conversations with our expert templates
-                    {templateLimit && displayedCount > 0 && (
-                      <span className={styles.limitBadge}>
-                        {displayedCount} of {templateLimit === "unlimited" ? "unlimited" : totalAvailable} templates
-                        {templateLimit !== "unlimited" && totalAvailable > displayedCount && (
+                {tabSubtitles[activeTab]}
+                {activeTab === "templates" &&
+                  templateLimit &&
+                  displayedCount > 0 && (
+                    <span className={styles.limitBadge}>
+                      {displayedCount} of{" "}
+                      {templateLimit === "unlimited"
+                        ? "unlimited"
+                        : totalAvailable}{" "}
+                      templates
+                      {templateLimit !== "unlimited" &&
+                        totalAvailable > displayedCount && (
                           <button
                             className={styles.upgradeLinkInline}
                             onClick={() => setShowUpgradeModal(true)}
@@ -396,24 +326,15 @@ export default function Dashboard() {
                             Upgrade for more
                           </button>
                         )}
-                      </span>
-                    )}
-                  </>
-                )}
-                {activeTab === "previous" &&
-                  "Review templates you've accessed before"}
-                {activeTab === "bookmarks" && "Your saved favorite templates"}
-                {activeTab === "coaching" &&
-                  "Get personalized guidance from our experts"}
-                {activeTab === "success-stories" &&
-                  "Share your success story and inspire others"}
+                    </span>
+                  )}
               </p>
             </div>
           </div>
 
           {activeTab === "templates" && (
             <div className={styles.searchBar}>
-              <SearchIcon className={styles.searchIcon} />
+              <IoSearch className={styles.searchIcon} />
               <input
                 type="text"
                 placeholder="Search templates..."
@@ -426,7 +347,7 @@ export default function Dashboard() {
                   className={styles.clearButton}
                   onClick={() => setSearchQuery("")}
                 >
-                  <CloseIcon />
+                  <IoClose />
                 </button>
               )}
             </div>
@@ -444,93 +365,41 @@ export default function Dashboard() {
                 }`}
                 onClick={() => setSelectedCategory(cat.id)}
               >
-                {cat.icon}
+                <cat.icon />
                 <span>{cat.label}</span>
               </button>
             ))}
           </div>
         )}
 
-        {/* Templates Grid */}
+        {/* Templates Tab */}
         {activeTab === "templates" && (
           <div className={styles.templatesGrid}>
-            {filteredTemplates.map((template) => {
-              const tierHierarchy = { starter: 0, pro: 1, elite: 2 };
-              const userTierLevel = tierHierarchy[currentTier] || 0;
-              const templateTierLevel = tierHierarchy[template.tier] || 0;
-              const isLocked = templateTierLevel > userTierLevel;
-
-              return (
-                <div
-                  key={template._id || template.id}
-                  className={`${styles.templateCard} ${isLocked ? styles.templateCardLocked : ''}`}
-                  onClick={() => handleTemplateClick(template)}
-                >
-                  {isLocked && (
-                    <div className={styles.premiumBadge}>
-                      <LockIcon />
-                      <span>{template.tier === 'pro' ? 'Pro' : 'Elite'}</span>
-                    </div>
-                  )}
-                  <div className={styles.templateHeader}>
-                    <h3>{template.title}</h3>
-                    {!currentTierInfo.limits.bookmarks ? (
-                      <button
-                        className={`${styles.bookmarkButton} ${styles.bookmarkLocked}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toast.info("Upgrade to Pro to bookmark templates");
-                          setShowUpgradeModal(true);
-                        }}
-                      >
-                        <LockIcon />
-                      </button>
-                    ) : (
-                      <button
-                        className={styles.bookmarkButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleToggleBookmark(template._id || template.id);
-                        }}
-                      >
-                        {template.isBookmarked ? (
-                          <BookmarkIcon className={styles.bookmarked} />
-                        ) : (
-                          <BookmarkOutlineIcon />
-                        )}
-                      </button>
-                    )}
-                  </div>
-                  <p className={styles.templateDescription}>
-                    {template.description}
-                  </p>
-                  <div className={styles.templateFooter}>
-                    <span className={styles.templateCategory}>
-                      {template.category}
-                    </span>
-                    <span className={styles.templateReads}>
-                      {template.views || 0} views
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
+            {filteredTemplates.map((template) => (
+              <TemplateCard
+                key={template._id || template.id}
+                template={template}
+                currentTier={currentTier}
+                currentTierInfo={currentTierInfo}
+                onTemplateClick={handleTemplateClick}
+                onBookmarkToggle={handleToggleBookmark}
+                showUpgradeModal={() => setShowUpgradeModal(true)}
+              />
+            ))}
           </div>
         )}
 
-        {/* Previous Templates */}
+        {/* Previous Tab */}
         {activeTab === "previous" && (
           <div className={styles.previousList}>
             {previousLoading ? (
-              <div className={styles.loadingContainer}>
-                <p>Loading previous templates...</p>
-              </div>
+              <LoadingState message="Loading previous templates..." />
             ) : (previousTemplates || []).length === 0 ? (
-              <div className={styles.emptyState}>
-                <TimeIcon className={styles.emptyIcon} />
-                <h3>No Previous Templates</h3>
-                <p>Templates you access will appear here</p>
-              </div>
+              <EmptyState
+                icon={IoTime}
+                title="No Previous Templates"
+                description="Templates you access will appear here"
+              />
             ) : (
               (previousTemplates || []).map((template) => (
                 <div
@@ -542,267 +411,83 @@ export default function Dashboard() {
                     <h3>{template.title}</h3>
                     <div className={styles.previousMeta}>
                       <span>
-                        <CalendarIcon /> {new Date(template.accessedAt || template.createdAt).toLocaleDateString()}
+                        <IoCalendar />{" "}
+                        {new Date(
+                          template.accessedAt || template.createdAt
+                        ).toLocaleDateString()}
                       </span>
                       <span className={styles.templateCategory}>
                         {template.category}
                       </span>
                     </div>
                   </div>
-                  <ChevronIcon className={styles.previousChevron} />
+                  <IoChevronForward className={styles.previousChevron} />
                 </div>
               ))
             )}
           </div>
         )}
 
-        {/* Bookmarked Templates */}
+        {/* Bookmarks Tab */}
         {activeTab === "bookmarks" && (
           <div className={styles.templatesGrid}>
             {bookmarksLoading ? (
-              <div className={styles.loadingContainer}>
-                <p>Loading bookmarked templates...</p>
-              </div>
+              <LoadingState message="Loading bookmarked templates..." />
             ) : (storeBookmarkedTemplates || []).length === 0 ? (
-              <div className={styles.emptyState}>
-                <BookmarkIcon className={styles.emptyIcon} />
-                <h3>No Bookmarked Templates</h3>
-                <p>Save your favorite templates for quick access</p>
-              </div>
+              <EmptyState
+                icon={IoBookmark}
+                title="No Bookmarked Templates"
+                description="Save your favorite templates for quick access"
+              />
             ) : (
               (storeBookmarkedTemplates || []).map((template) => (
-                <div
+                <TemplateCard
                   key={template._id || template.id}
-                  className={styles.templateCard}
-                  onClick={() => handleTemplateClick(template)}
-                >
-                  <div className={styles.templateHeader}>
-                    <h3>{template.title}</h3>
-                    <button
-                      className={styles.bookmarkButton}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggleBookmark(template._id || template.id);
-                      }}
-                    >
-                      <BookmarkIcon className={styles.bookmarked} />
-                    </button>
-                  </div>
-                  <p className={styles.templateDescription}>
-                    {template.description}
-                  </p>
-                  <div className={styles.templateFooter}>
-                    <span className={styles.templateCategory}>
-                      {template.category}
-                    </span>
-                    <span className={styles.templateReads}>
-                      {template.views || 0} views
-                    </span>
-                  </div>
-                </div>
+                  template={template}
+                  currentTier={currentTier}
+                  currentTierInfo={currentTierInfo}
+                  onTemplateClick={handleTemplateClick}
+                  onBookmarkToggle={handleToggleBookmark}
+                  showUpgradeModal={() => setShowUpgradeModal(true)}
+                />
               ))
             )}
           </div>
         )}
 
-        {/* Coaching & Support */}
+        {/* Coaching Tab */}
         {activeTab === "coaching" && (
-          <div className={styles.coachingSection}>
-            {(currentTier === "elite") && (
-              <div className={styles.coachingCard}>
-                <div className={styles.coachingIcon}>
-                  <TelegramIcon />
-                </div>
-                <h2>Join Our Telegram Community</h2>
-                <p>
-                  Connect with other queens, get instant support, and access exclusive content in our private Telegram group.
-                </p>
-                <button 
-                  className={styles.coachingBookButton}
-                  onClick={handleTelegramClick}
-                >
-                  <TelegramIcon />
-                  <span>Join Telegram Group</span>
-                </button>
-              </div>
-            )}
-
-            <div className={styles.coachingCard}>
-              <div className={styles.coachingIcon}>
-                <ChatIcon />
-              </div>
-              <h2>Ask Our Experts</h2>
-              <p>
-                Have questions about using a template? Need personalized advice?
-                Our team is here to help!
-              </p>
-              <textarea
-                className={styles.coachingTextarea}
-                placeholder="Type your question here..."
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-                rows={5}
-              />
-              <button
-                className={styles.coachingSendButton}
-                onClick={handleReplySubmit}
-              >
-                <SendIcon />
-                <span>Send Message</span>
-              </button>
-            </div>
-
-            {currentTier === "elite" && (
-              <div className={styles.coachingCard}>
-                <div className={styles.coachingIcon}>
-                  <CrownIcon />
-                </div>
-                <h2>1-on-1 Coaching Session</h2>
-                <p>
-                  As a Queen Elite member, you have access to a 60-minute
-                  coaching session!
-                </p>
-                <button className={styles.coachingBookButton}>
-                  <CalendarIcon />
-                  <span>Book Your Session</span>
-                </button>
-              </div>
-            )}
-
-            <div className={styles.responseTimes}>
-              <div className={styles.responseTimeItem}>
-                <CheckIcon />
-                <div>
-                  <strong>Response Time</strong>
-                  <p>{currentTierInfo.limits.responseTime}</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <CoachingSection
+            currentTier={currentTier}
+            currentTierInfo={currentTierInfo}
+          />
         )}
 
-        {/* Success Stories */}
-        {activeTab === "success-stories" && (
-          <SuccessStorySubmission />
-        )}
+        {/* Success Stories Tab */}
+        {activeTab === "success-stories" && <SuccessStorySubmission />}
       </main>
 
       {/* Template Modal */}
       {selectedTemplate && (
-        <div className={styles.modalOverlay} onClick={() => setSelectedTemplate(null)}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <button
-              className={styles.modalClose}
-              onClick={() => setSelectedTemplate(null)}
-            >
-              <CloseIcon />
-            </button>
-            <div className={styles.modalHeader}>
-              <h2>{selectedTemplate.title}</h2>
-              {currentTierInfo.limits.bookmarks && (
-                <button
-                  className={styles.modalBookmark}
-                  onClick={() => handleToggleBookmark(selectedTemplate._id || selectedTemplate.id)}
-                >
-                  {selectedTemplate.isBookmarked ? (
-                    <BookmarkIcon className={styles.bookmarked} />
-                  ) : (
-                    <BookmarkOutlineIcon />
-                  )}
-                </button>
-              )}
-            </div>
-            <div
-              className={styles.modalBody}
-              dangerouslySetInnerHTML={{ __html: selectedTemplate.content }}
-            />
-            <div className={styles.modalFooter}>
-              <button className={styles.modalAskButton}>
-                <ChatIcon />
-                <span>Ask a Question</span>
-              </button>
-            </div>
-          </div>
-        </div>
+        <TemplateModal
+          template={selectedTemplate}
+          currentTierInfo={currentTierInfo}
+          onClose={() => setSelectedTemplate(null)}
+          onBookmarkToggle={handleToggleBookmark}
+        />
       )}
 
       {/* Upgrade Modal */}
       {showUpgradeModal && (
-        <div
-          className={styles.modalOverlay}
-          onClick={() => setShowUpgradeModal(false)}
-        >
-          <div
-            className={styles.upgradeModal}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className={styles.modalClose}
-              onClick={() => setShowUpgradeModal(false)}
-            >
-              <CloseIcon />
-            </button>
-            <div className={styles.upgradeHeader}>
-              <RocketIcon />
-              <h2>Upgrade Your Plan</h2>
-              <p>
-                {currentTier === "starter"
-                  ? "Unlock more templates and premium features"
-                  : currentTier === "pro"
-                  ? "Get access to exclusive coaching and unlimited templates"
-                  : "You're on the best plan!"}
-              </p>
-            </div>
-            <div className={styles.upgradeTiers}>
-              {getAllTiers()
-                .filter(tier => getTierLevel(tier.id) > getTierLevel(currentTier))
-                .map((tier) => (
-                  <div 
-                    key={tier.id}
-                    className={`${styles.upgradeTier} ${
-                      tier.id === "pro" && currentTier === "starter" ? styles.upgradeTierPopular : ""
-                    }`}
-                  >
-                    {tier.id === "pro" && currentTier === "starter" && (
-                      <div className={styles.popularBadge}>Most Popular</div>
-                    )}
-                    <h3>{tier.name}</h3>
-                    <p className={styles.upgradePrice}>
-                      {tier.currency} {tier.price.toLocaleString()}
-                    </p>
-                    <ul>
-                      {tier.features.map((feature, idx) => (
-                        <li key={idx}>
-                          <CheckIcon className={styles.benefitIcon} />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <button
-                      className={styles.upgradeSelectButton}
-                      onClick={() => handleUpgrade(tier)}
-                      disabled={paymentLoading || upgradingToTier === tier.id}
-                    >
-                      {upgradingToTier === tier.id 
-                        ? "Processing..." 
-                        : `Upgrade to ${tier.name.split(' ')[1]}`}
-                    </button>
-                  </div>
-                ))}
-
-              {currentTier === "elite" && (
-                <div className={styles.eliteMessage}>
-                  <CrownIcon className={styles.eliteCrown} />
-                  <h3>You&apos;re a Queen Elite!</h3>
-                  <p>
-                    You have access to all premium features including unlimited
-                    templates, coaching & support, and VIP assistance.
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        <UpgradeModal
+          currentTier={currentTier}
+          tiers={tiers}
+          getTierLevel={getTierLevel}
+          onUpgrade={handleUpgrade}
+          onClose={() => setShowUpgradeModal(false)}
+          paymentLoading={paymentLoading}
+          upgradingToTier={upgradingToTier}
+        />
       )}
     </div>
   );

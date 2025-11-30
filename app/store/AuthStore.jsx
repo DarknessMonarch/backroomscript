@@ -3,10 +3,14 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
+const getProfileImageUrl = (profileImage) => {
+  if (!profileImage) return null;
+  return profileImage.startsWith('http') ? profileImage : `${SERVER_API}${profileImage}`;
+};
+
 export const useAuthStore = create(
   persist(
     (set, get) => ({
-      // Auth State
       isAuth: false,
       userId: "",
       username: "",
@@ -23,7 +27,6 @@ export const useAuthStore = create(
       isInitialized: false,
       fcmToken: "",
 
-      // Initialize Auth
       initializeAuth: async () => {
         const state = get();
         if (state.isInitialized) return;
@@ -48,9 +51,8 @@ export const useAuthStore = create(
         get().scheduleTokenRefresh();
       },
 
-      // Set User
       setUser: (userData) => {
-        const tokenExpirationTime = Date.now() + 60 * 60 * 1000; // 1 hour
+        const tokenExpirationTime = Date.now() + 60 * 60 * 1000;
         set({
           isAuth: true,
           userId: userData.id,
@@ -69,12 +71,10 @@ export const useAuthStore = create(
         get().scheduleTokenRefresh();
       },
 
-      // Update User
       updateUser: (userData) => {
         set((state) => ({ ...state, ...userData }));
       },
 
-      // Clear User
       clearUser: () => {
         get().cancelTokenRefresh();
         set({
@@ -95,12 +95,10 @@ export const useAuthStore = create(
         });
       },
 
-      // Set FCM Token
       setFcmToken: (token) => {
         set({ fcmToken: token });
       },
 
-      // Register
       register: async (userData) => {
         try {
           const response = await fetch(`${SERVER_API}/auth/register`, {
@@ -122,7 +120,6 @@ export const useAuthStore = create(
         }
       },
 
-      // Verify Email
       verifyEmail: async (email, verificationCode) => {
         try {
           const response = await fetch(`${SERVER_API}/auth/verify-email`, {
@@ -143,7 +140,6 @@ export const useAuthStore = create(
         }
       },
 
-      // Resend Verification Code
       resendVerificationCode: async (email) => {
         try {
           const response = await fetch(`${SERVER_API}/auth/resend-verification`, {
@@ -166,7 +162,6 @@ export const useAuthStore = create(
         }
       },
 
-      // Login
       login: async (email, password) => {
         try {
           const response = await fetch(`${SERVER_API}/auth/login`, {
@@ -199,13 +194,11 @@ export const useAuthStore = create(
         }
       },
 
-      // Logout
       logout: async () => {
         get().clearUser();
         return { success: true, message: "Logout successful" };
       },
 
-      // Refresh Access Token
       refreshAccessToken: async () => {
         try {
           const { refreshToken } = get();
@@ -241,7 +234,6 @@ export const useAuthStore = create(
         }
       },
 
-      // Schedule Token Refresh
       scheduleTokenRefresh: () => {
         const { tokenExpirationTime, refreshTimeoutId, isAuth, accessToken } = get();
         
@@ -260,7 +252,7 @@ export const useAuthStore = create(
           return;
         }
 
-        const timeUntilRefresh = timeUntilExpiration - 300000; // 5 minutes before expiry
+        const timeUntilRefresh = timeUntilExpiration - 300000;
         const newTimeoutId = setTimeout(() => {
           get().refreshAccessToken();
         }, timeUntilRefresh);
@@ -268,7 +260,6 @@ export const useAuthStore = create(
         set({ refreshTimeoutId: newTimeoutId });
       },
 
-      // Cancel Token Refresh
       cancelTokenRefresh: () => {
         const { refreshTimeoutId } = get();
         if (refreshTimeoutId) {
@@ -277,7 +268,6 @@ export const useAuthStore = create(
         }
       },
 
-      // Request Password Reset
       requestPasswordReset: async (email) => {
         try {
           const response = await fetch(`${SERVER_API}/auth/reset-password-request`, {
@@ -294,7 +284,6 @@ export const useAuthStore = create(
         }
       },
 
-      // Reset Password
       resetPassword: async (token, newPassword) => {
         try {
           const response = await fetch(`${SERVER_API}/auth/reset-password`, {
@@ -311,7 +300,6 @@ export const useAuthStore = create(
         }
       },
 
-      // Update Profile
       updateProfile: async (updateData) => {
         try {
           const { accessToken } = get();
@@ -336,7 +324,6 @@ export const useAuthStore = create(
         }
       },
 
-      // Delete Account
       deleteAccount: async () => {
         try {
           const { accessToken } = get();
@@ -357,7 +344,6 @@ export const useAuthStore = create(
         }
       },
 
-      // Submit Contact Form
       submitContactForm: async (email, name, subject, message) => {
         try {
           const response = await fetch(`${SERVER_API}/auth/contact`, {
@@ -374,10 +360,18 @@ export const useAuthStore = create(
         }
       },
 
-      // Upload Profile Picture
       uploadProfilePicture: async (file) => {
         try {
           const { accessToken } = get();
+          
+          if (!file.type.startsWith('image/')) {
+            return { success: false, message: 'Please select an image file' };
+          }
+
+          if (file.size > 5 * 1024 * 1024) {
+            return { success: false, message: 'Image size must be less than 5MB' };
+          }
+
           const formData = new FormData();
           formData.append('profilePicture', file);
 
@@ -392,7 +386,7 @@ export const useAuthStore = create(
           const data = await response.json();
           if (data.status === "success") {
             set({ profileImage: data.data.profileImage });
-            return { success: true, message: data.message };
+            return { success: true, message: data.message || "Profile picture updated successfully" };
           }
           return { success: false, message: data.message };
         } catch (error) {
@@ -401,7 +395,11 @@ export const useAuthStore = create(
         }
       },
 
-      // Get Auth Header
+      getProfileImageUrl: () => {
+        const { profileImage } = get();
+        return getProfileImageUrl(profileImage);
+      },
+
       getAuthHeader: () => {
         const { accessToken } = get();
         return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};

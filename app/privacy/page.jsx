@@ -26,7 +26,7 @@ export default function Privacy() {
 
         <section>
           <h2>4. Your Rights</h2>
-          <p>You have the right to access, update, or delete your personal information. Contact us at support@backroomscript.com for any requests.</p>
+          <p>You have the right to access, update, or delete your personal information. Contact us at backroomscript@gmail.com for any requests.</p>
         </section>
 
         <section>
@@ -36,7 +36,7 @@ export default function Privacy() {
 
         <section>
           <h2>6. Contact Us</h2>
-          <p>For any privacy-related questions, please contact us at support@backroomscript.com</p>
+          <p>For any privacy-related questions, please contact us at backroomscript@gmail.com</p>
         </section>
       </div>
     </div>

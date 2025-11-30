@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import LoadingLogo from "@/app/components/loadingLogo"
 import styles from "@/app/style/pricingCard.module.css";
 import {
   IoCheckmark as CheckIcon,
@@ -92,7 +93,11 @@ export default function PricingCard({
         <div className={styles.price}>
           <span className={styles.currency}>{tier.currency}</span>
           <span className={styles.amount}>
-            {tier.price === 0 ? "Free" : tier.price.toLocaleString()}
+            {tier.price != null && tier.price > 0
+              ? tier.price.toLocaleString()
+              : tier.id === "starter"
+              ? "Free"
+              : <LoadingLogo/>}
           </span>
         </div>
         {tier.price > 0 && variant !== "compact" && (

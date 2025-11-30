@@ -1,10 +1,10 @@
 import { create } from "zustand";
+import { shallow } from "zustand/shallow";
 import { useAuthStore } from "./AuthStore";
 
 const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
 export const useSubscriptionStore = create((set, get) => ({
-  // Subscription State
   currentSubscription: null,
   subscriptionLoading: false,
   paymentLoading: false,
@@ -12,18 +12,16 @@ export const useSubscriptionStore = create((set, get) => ({
   allSubscriptions: [],
   allSubscriptionsLoading: false,
 
-  // Unified Tier Information - Single source of truth
   tiers: {
     starter: {
       id: "starter",
       name: "Starter Glow",
-      price: 0,
+      price: 0, 
       currency: "KSh",
       description: "Perfect for beginning your conversation journey",
       features: [
-        "Access to 1 template per day",
-        "Quick-start confidence guide",
-        "Email support (24h response)"
+        "Email support (24h response)",
+        "Access to 1 basic template per day"
       ],
       limits: {
         templatesPerDay: 1,
@@ -39,18 +37,19 @@ export const useSubscriptionStore = create((set, get) => ({
     pro: {
       id: "pro",
       name: "Radiant Pro",
-      price: 3499,
+      price: null, 
       currency: "KSh",
       description: "Elevate your communication with confidence",
       features: [
         "Community support",
-        "50+ Premium templates",
+        "20+ Premium templates",
         "Bookmark your favorites",
         "Access previous templates",
         "Everything in Starter Glow",
         "Advanced flirting techniques",
         "Relationship building methods",
         "Priority support (12h response)",
+        "Teaching strategies to make it on tinder and the likes",
       ],
       limits: {
         templatesPerDay: "unlimited",
@@ -66,20 +65,21 @@ export const useSubscriptionStore = create((set, get) => ({
     elite: {
       id: "elite",
       name: "Queen Elite",
-      price: 9999,
+      price: null, 
       currency: "KSh",
       description: "Complete mastery with personal coaching",
       features: [
-        "100+ Expert templates (unlimited access)",
+        "Unlimited Expert templates",
         "All categories unlocked",
         "Monthly content updates",
-        "Direct WhatsApp support",
+        "Direct Telegram support",
         "Custom template requests",
         "Lifetime content updates",
         "Everything on Radiant Pro",
-        "Coaching & support access",
         "Priority feature requests",
         "1-on-1 coaching session (60min)",
+        "Access to hidden dating site that your success is higher than average",
+
       ],
       limits: {
         templatesPerDay: "unlimited",
@@ -93,8 +93,9 @@ export const useSubscriptionStore = create((set, get) => ({
       gradient: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)"
     }
   },
+  pricingLoaded: false,
+  pricingFetching: false,
 
-  // Get Current Subscription
   getSubscription: async () => {
     try {
       set({ subscriptionLoading: true });
@@ -110,10 +111,9 @@ export const useSubscriptionStore = create((set, get) => ({
           currentSubscription: data.data.subscription,
           subscriptionLoading: false,
         });
-        
-        // Update auth store with current tier
-        useAuthStore.getState().updateUser({ 
-          currentTier: data.data.currentTier 
+
+        useAuthStore.getState().updateUser({
+          currentTier: data.data.currentTier
         });
         
         return { success: true, data: data.data };
@@ -127,7 +127,6 @@ export const useSubscriptionStore = create((set, get) => ({
     }
   },
 
-  // Initialize Payment
   initializePayment: async (tier) => {
     try {
       set({ paymentLoading: true });
@@ -145,9 +144,9 @@ export const useSubscriptionStore = create((set, get) => ({
       const data = await response.json();
       if (data.status === "success") {
         set({ paymentLoading: false });
-        return { 
-          success: true, 
-          data: data.data // Contains authorizationUrl, reference, accessCode
+        return {
+          success: true,
+          data: data.data
         };
       }
       set({ paymentLoading: false });
@@ -159,7 +158,6 @@ export const useSubscriptionStore = create((set, get) => ({
     }
   },
 
-  // Verify Payment
   verifyPayment: async (reference) => {
     try {
       set({ verifyingPayment: true });
@@ -175,10 +173,9 @@ export const useSubscriptionStore = create((set, get) => ({
           verifyingPayment: false,
           currentSubscription: data.data.subscription,
         });
-        
-        // Update auth store with new tier
-        useAuthStore.getState().updateUser({ 
-          currentTier: data.data.tier 
+
+        useAuthStore.getState().updateUser({
+          currentTier: data.data.tier
         });
         
         return { 
@@ -196,32 +193,107 @@ export const useSubscriptionStore = create((set, get) => ({
     }
   },
 
-  // Get Tier Info
   getTierInfo: (tier) => {
     const { tiers } = get();
     return tiers[tier] || tiers.starter;
   },
 
-  // Get All Tiers as Array
   getAllTiers: () => {
     const { tiers } = get();
     return Object.values(tiers);
   },
 
-  // Check if User Can Access Tier
   canAccessTier: (requiredTier) => {
     const { currentTier } = useAuthStore.getState();
     const tierHierarchy = { starter: 0, pro: 1, elite: 2 };
     return tierHierarchy[currentTier] >= tierHierarchy[requiredTier];
   },
 
-  // Get Tier Hierarchy Level
   getTierLevel: (tier) => {
     const tierHierarchy = { starter: 0, pro: 1, elite: 2 };
     return tierHierarchy[tier] || 0;
   },
 
-  // Admin: Get All Subscriptions
+  fetchPricing: async () => {
+    try {
+      console.log("💰 Fetching pricing from:", `${SERVER_API}/subscriptions/pricing`);
+
+      const response = await fetch(`${SERVER_API}/subscriptions/pricing`, {
+        cache: 'no-store', // Ensure fresh data on every request
+        next: { revalidate: 0 }
+      });
+
+      if (!response.ok) {
+        console.error("❌ Pricing fetch failed with status:", response.status);
+        set({ pricingError: `HTTP ${response.status}` });
+        return { success: false, message: `HTTP ${response.status}` };
+      }
+
+      const data = await response.json();
+      console.log("📦 Pricing response:", data);
+
+      if (data.status === "success") {
+        const { pricing } = data.data;
+
+        console.log("✅ Updating store with pricing:", {
+          pro: pricing.pro.price,
+          elite: pricing.elite.price
+        });
+
+        set((state) => ({
+          tiers: {
+            ...state.tiers,
+            pro: { ...state.tiers.pro, price: pricing.pro.price },
+            elite: { ...state.tiers.elite, price: pricing.elite.price }
+          },
+          pricingLoaded: true,
+          pricingError: null
+        }));
+
+        console.log("🎉 Pricing loaded successfully");
+        return { success: true, data: pricing };
+      }
+
+      console.error("❌ Pricing response status not success:", data);
+      set({ pricingError: data.message });
+      return { success: false, message: data.message };
+    } catch (error) {
+      console.error("❌ Fetch pricing error:", error);
+      set({ pricingError: error.message });
+      return { success: false, message: "Failed to fetch pricing" };
+    }
+  },
+
+  // Auto-fetch pricing with retry mechanism
+  initializePricing: async (retries = 3) => {
+    const { pricingLoaded } = get();
+    
+    // If already loaded, don't fetch again
+    if (pricingLoaded) {
+      console.log("✅ Pricing already loaded, skipping fetch");
+      return { success: true };
+    }
+
+    for (let i = 0; i < retries; i++) {
+      console.log(`🔄 Pricing fetch attempt ${i + 1}/${retries}`);
+      const result = await get().fetchPricing();
+      
+      if (result.success) {
+        return result;
+      }
+      
+      // Wait before retry (exponential backoff)
+      if (i < retries - 1) {
+        const delay = Math.min(1000 * Math.pow(2, i), 5000);
+        console.log(`⏳ Retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+    
+    console.error("❌ All pricing fetch attempts failed");
+    return { success: false, message: "Failed to load pricing after retries" };
+  },
+
   getAllSubscriptions: async () => {
     try {
       set({ allSubscriptionsLoading: true });
@@ -248,7 +320,6 @@ export const useSubscriptionStore = create((set, get) => ({
     }
   },
 
-  // Admin: Grant Subscription
   grantSubscription: async (userId, tier, duration) => {
     try {
       const { getAuthHeader } = useAuthStore.getState();

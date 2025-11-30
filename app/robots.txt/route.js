@@ -5,14 +5,18 @@ Allow: /
 # Allow important pages
 Allow: /tiers
 Allow: /about
+Allow: /terms
 Allow: /contact
+Allow: /privacy
 Allow: /success-stories
+
 
 # Disallow admin and private areas
 Disallow: /admin
 Disallow: /api
 Disallow: /_next
 Disallow: /static
+Disallow: /dashboard
 Disallow: /authentication
 
 # Sitemap location

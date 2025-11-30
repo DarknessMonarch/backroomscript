@@ -46,7 +46,7 @@ export const metadata = {
 
   alternates: {
     canonical: `${SITE_URL}/contact`,
-  },
+  },  
 };
 
 // JSON-LD for BreadcrumbList
@@ -84,9 +84,9 @@ const contactPageSchema = {
     contactPoint: [
       {
         "@type": "ContactPoint",
-        telephone: "+254796620365",
+        telephone: "+447401012610",
         contactType: "Customer Support",
-        email: "support@backroomscript.com",
+        email: "backroomscript@gmail.co",
         areaServed: "Worldwide",
         availableLanguage: "English",
         hoursAvailable: {
@@ -98,9 +98,9 @@ const contactPageSchema = {
       },
       {
         "@type": "ContactPoint",
-        telephone: "+254796620365",
-        contactType: "VIP Support",
-        email: "vip@backroomscript.com",
+        telephone: "+447401012610",
+        contactType: "Customer Support",
+        email: "backroomscript@gmail.co",
         areaServed: "Worldwide",
         availableLanguage: "English",
         hoursAvailable: {
@@ -120,9 +120,9 @@ const contactPageSchema = {
     ],
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Nairobi",
-      addressCountry: "Kenya",
-      postalCode: "00100",
+      addressLocality: "Australia",
+      addressCountry: "Us",
+      postalCode: "",
     },
   },
 };

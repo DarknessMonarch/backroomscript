@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/app/store/AuthStore";
 import { useSubscriptionStore } from "@/app/store/SubscriptionStore";
@@ -11,14 +11,21 @@ import styles from "@/app/style/tiers.module.css";
 export default function TiersPage() {
   const router = useRouter();
   const { isAuth, currentTier } = useAuthStore();
-  const { 
-    getAllTiers, 
-    getTierLevel, 
-    initializePayment, 
-    paymentLoading
-  } = useSubscriptionStore();
+
+  const tiersObject = useSubscriptionStore((state) => state.tiers);
+  const pricingLoaded = useSubscriptionStore((state) => state.pricingLoaded);
+  const getTierLevel = useSubscriptionStore((state) => state.getTierLevel);
+  const initializePayment = useSubscriptionStore((state) => state.initializePayment);
+  const paymentLoading = useSubscriptionStore((state) => state.paymentLoading);
+
+  const tiers = useMemo(() => Object.values(tiersObject), [tiersObject]);
 
   const [processingTier, setProcessingTier] = useState(null);
+
+  useEffect(() => {
+    console.log("🎨 Tiers page: Pricing loaded =", pricingLoaded);
+    console.log("💵 Current tier prices:", tiers.map(t => ({ id: t.id, price: t.price })));
+  }, [pricingLoaded, tiers]);
 
   const handleSelectTier = async (tier) => {
     if (!isAuth) {
@@ -68,7 +75,7 @@ export default function TiersPage() {
   return (
     <div className={styles.container}>
       <PricingGrid
-        tiers={getAllTiers()}
+        tiers={tiers}
         currentTier={currentTier}
         onSelectTier={handleSelectTier}
         loading={processingTier}

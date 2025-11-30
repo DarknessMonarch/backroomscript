@@ -133,36 +133,19 @@ export default function ContactUs() {
           <div className={styles.contactItem}>
             <h3>Customer Support</h3>
             <p>
-              <strong>Phone:</strong> (+254) 796-620-365
+              <strong>Phone:</strong> (+44) 7401-012-610
             </p>
             <p>
-              <strong>Email:</strong> support@backroomscript.com
+              <strong>Email:</strong> backroomscript@gmail.com
             </p>
             <p>
-              <strong>Hours:</strong> Monday - Friday, 8:00 AM - 6:00 PM EAT
+              <strong>Hours:</strong> Monday - Friday, 8:00 AM - 6:00 PM GMT
             </p>
           </div>
-
-          <div className={styles.contactItem}>
-            <h3>Coaching & VIP Support</h3>
-            <p>
-              <strong>WhatsApp:</strong> (+254) 796-620-365
-            </p>
-            <p>
-              <strong>Email:</strong> vip@backroomscript.com
-            </p>
-            <p>
-              <strong>Hours:</strong> Monday - Saturday, 9:00 AM - 7:00 PM EAT
-            </p>
-          </div>
-
           <div className={styles.contactItem}>
             <h3>Business Address</h3>
             <p>BackroomScript Ltd.</p>
-            <p>Nairobi, Kenya</p>
-            <p>
-              <strong>Postal Code:</strong> 00100
-            </p>
+            <p>United Kingdom</p>
           </div>
         </div>
       </div>
@@ -249,17 +232,14 @@ export default function ContactUs() {
         </p>
         <ul className={styles.bulletList}>
           <li>
-            <strong>Template Access:</strong> All templates are instantly
+            <strong>Template Access:</strong> Templates are instantly
             accessible after purchase through your dashboard
           </li>
           <li>
             <strong>Tier Upgrades:</strong> You can upgrade to a higher tier at
-            any time, paying only the difference
+            any time
           </li>
-          <li>
-            <strong>Guarantee:</strong> 30-day love-it guarantee on all tiers -
-            full refund if you're not satisfied
-          </li>
+       
           <li>
             <strong>Coaching Sessions:</strong> Queen Elite members can schedule
             their 1-on-1 coaching session via email or WhatsApp

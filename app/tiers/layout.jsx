@@ -74,28 +74,28 @@ const tiersSchema = {
       "@type": "Offer",
       "position": 1,
       "name": "Starter Glow",
-      "description": "Access to 1 template, basic conversation starters, and community support",
+      "description": "Perfect for beginning your conversation journey",
       "price": "0",
       "priceCurrency": "KES",
       "availability": "https://schema.org/InStock",
       "itemOffered": {
         "@type": "Product",
         "name": "Starter Glow Tier",
-        "description": "Free access to essential conversation templates"
+        "description": "Access to 1 template and Email support"
       }
     },
     {
       "@type": "Offer",
       "position": 2,
       "name": "Radiant Pro",
-      "description": "Unlimited template access, advanced conversation scripts, priority email support, and coaching sessions available",
-      "price": "3499",
+      "description": "Elevate your communication with confidence",
+      "price": "999",
       "priceCurrency": "KES",
       "availability": "https://schema.org/InStock",
       "itemOffered": {
         "@type": "Product",
         "name": "Radiant Pro Tier",
-        "description": "Premium conversation templates with priority support",
+        "description": "Community support, 20+ Premium templates, Bookmark your favorites, Access previous templates, Everything in Starter Glow, Advanced flirting techniques, Relationship building methods, Priority support (12h response) and Teaching strategies to make it on tinder and the likes",
         "aggregateRating": {
           "@type": "AggregateRating",
           "ratingValue": "4.9",
@@ -107,14 +107,14 @@ const tiersSchema = {
       "@type": "Offer",
       "position": 3,
       "name": "Queen Elite",
-      "description": "Everything in Pro plus VIP support within 2 hours, exclusive elite templates, 1-on-1 coaching sessions, and lifetime access",
-      "price": "9999",
+      "description": "Complete mastery with personal coaching",
+      "price": "3499",
       "priceCurrency": "KES",
       "availability": "https://schema.org/InStock",
       "itemOffered": {
         "@type": "Product",
         "name": "Queen Elite Tier",
-        "description": "Ultimate conversation mastery with VIP support and personal coaching",
+        "description": "You get unlimited expert templates, all categories unlocked, monthly content updates, direct Telegram support, custom template requests, lifetime content updates, everything included in Radiant Pro, priority feature requests, a 1-on-1 coaching session (60 minutes), and access to a hidden dating site where your success is higher than average",
         "aggregateRating": {
           "@type": "AggregateRating",
           "ratingValue": "5.0",

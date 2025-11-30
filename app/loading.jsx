@@ -1,18 +1,12 @@
-import Image from "next/image";
 import styles from "@/app/style/loading.module.css";
-import AnimatedLogo from "@/public/assets/loading.gif";
+import { IoSparkles as SparklesIcon } from "react-icons/io5";
 
 export default function Loading() {
   return (
     <div className={styles.loadingComponent}>
-      <Image
-        className={styles.loadingImg}
-        src={AnimatedLogo}
-        alt="Animated Logo "
-        height={100}
-        loading="lazy"
-        optimize="false"
-      />
+     <div className={styles.loader}>
+        <SparklesIcon className={styles.loaderIcon} />
+      </div>
     </div>
   );
 }

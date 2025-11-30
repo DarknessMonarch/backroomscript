@@ -1,20 +1,14 @@
 @media screen {
   .wrapper {
-    width: 100%;
-    padding: 4rem 1.5rem;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 250, 245, 0.4) 0%,
-      rgba(255, 245, 250, 0.4) 100%
-    );
-    display: flex;
-    flex-direction: column;
     gap: 6rem;
+    width: 100%;
+    display: flex;
+    padding: 2rem 1rem;
+    background: var(--light-background-color);
+    flex-direction: column;
+
   }
 
-  /* ===========================
-     TESTIMONIALS SECTION
-     =========================== */
 
   .testimonialsContainer {
     width: 100%;
@@ -23,6 +17,7 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
+
   }
 
   .headerContainer {
@@ -125,9 +120,9 @@
   }
 
   .testimonialCard {
-    min-width: 320px;
-    max-width: 320px;
-    background: var(--glass-bg-medium);
+    min-width: 300px;
+    max-width: 300px;
+    background: var(--glass-bg-light);
     backdrop-filter: var(--blur-md);
     -webkit-backdrop-filter: var(--blur-md);
     border: 1px solid rgba(236, 72, 153, 0.1);
@@ -241,7 +236,7 @@
 
   .faqContainer {
     width: 100%;
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -294,6 +289,8 @@
     cursor: pointer;
     text-align: left;
     transition: background 0.3s ease;
+    background: var(--glass-bg-medium);
+
   }
 
   .faqQuestion:hover {
@@ -343,14 +340,8 @@
   }
 }
 
-/* ===========================
-   TABLET STYLES (768px+)
-   =========================== */
-
 @media only screen and (min-width: 48em) {
-  .wrapper {
-    padding: 6rem 2rem;
-  }
+
 
   .sectionTitle {
     font-size: 2.5rem;

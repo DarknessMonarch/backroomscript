@@ -131,14 +131,13 @@
   border-radius: var(--radius-lg);
   max-width: 500px;
   width: 100%;
+  box-shadow: var(--glass-shadow-sm);
   transition: all var(--transition-smooth);
 }
 
 .badge:hover {
   background: var(--glass-bg-medium);
-  border-color: rgba(236, 72, 153, 0.2);
   transform: translateY(-2px);
-  box-shadow: var(--glass-shadow-sm);
 }
 
 .badge svg {

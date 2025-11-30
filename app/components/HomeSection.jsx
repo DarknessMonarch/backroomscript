@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import SuccessWoman from "@/public/assets/successWoman.png";
@@ -6,13 +7,42 @@ import styles from "@/app/style/homeSection.module.css";
 import {
   IoSparkles as SparklesIcon,
   IoHeart as HeartIcon,
-  IoDiamond as DiamondIcon,
-  IoLockClosed as LockIcon,
-  IoTime as ClockIcon,
   IoChevronForward as ChevronIcon,
 } from "react-icons/io5";
 
+const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
+
 export default function HomeSection() {
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    weeklyUsers: 0,
+    weeklyGrowth: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await fetch(`${SERVER_API}/auth/stats/public`);
+        const data = await response.json();
+
+        if (data.status === "success") {
+          setStats({
+            totalUsers: data.data.totalUsers,
+            weeklyUsers: data.data.weeklyUsers,
+            weeklyGrowth: data.data.weeklyGrowth,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   return (
     <div className={styles.homeSection}>
       <section className={styles.heroSection}>
@@ -20,7 +50,7 @@ export default function HomeSection() {
           <div className={styles.heroContent}>
             <div className={styles.badge}>
               <HeartIcon className={styles.badgeIcon} />
-              <span>Join 2,251+ Women Finding Their Voice</span>
+              <span>Join 2,251 + Women Finding Their Voice</span>
             </div>
 
             <h1 className={styles.heroTitle}>
@@ -38,18 +68,18 @@ export default function HomeSection() {
             </p>
 
             <div className={styles.ctaButtons}>
-              <Link href="#pricing" className={styles.ctaPrimary}>
+              <Link href="/tiers" className={styles.ctaPrimary}>
                 <span>Start Your Journey</span>
                 <SparklesIcon className={styles.ctaIcon} />
               </Link>
-              <Link href="#how-it-works" className={styles.ctaSecondary}>
+              <Link href="/about" className={styles.ctaSecondary}>
                 <span>See How It Works</span>
                 <ChevronIcon className={styles.ctaIcon} />
               </Link>
             </div>
             <div className={styles.statsGrid}>
               <div className={styles.statCard}>
-                <h1>2,251+</h1>
+                <h1>200+</h1>
                 <p>QueensRising</p>
               </div>
               <div className={styles.statCard}>
@@ -61,7 +91,6 @@ export default function HomeSection() {
                 <p>Templates</p>
               </div>
             </div>
-         
           </div>
 
           <div className={styles.heroImage}>
@@ -75,11 +104,15 @@ export default function HomeSection() {
 
               <div className={styles.floatingCard}>
                 <div className={styles.cardHeader}>
-                  <span className={styles.cardTitle}>New learner</span>
-                  <span className={styles.cardBadge}>36% ↑</span>
+                  <span className={styles.cardTitle}>New Queens</span>
+                  <span className={styles.cardBadge}>
+                    {isLoading ? "..." : `${stats.weeklyGrowth > 0 ? "+" : ""}${stats.weeklyGrowth}%`} {stats.weeklyGrowth >= 0 ? "↑" : "↓"}
+                  </span>
                 </div>
-                <div className={styles.cardSubtitle}>This Week</div>
-                <div className={styles.cardValue}>6544</div>
+                <div className={styles.cardSubtitle}>Today</div>
+                <div className={styles.cardValue}>
+                  {isLoading ? "..." : `${stats.weeklyUsers.toLocaleString()}`}
+                </div>
                 <div className={styles.cardChart}>
                   <svg width="100%" height="30" viewBox="0 0 100 30">
                     <path
@@ -100,7 +133,7 @@ export default function HomeSection() {
                   <div className={styles.avatar}>👸🏿</div>
                 </div>
                 <span className={styles.mentorsText}>
-                  200+ Top class mentor
+                  100+ Top Mentor
                 </span>
               </div>
             </div>

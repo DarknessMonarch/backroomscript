@@ -10,10 +10,31 @@
     position: absolute;
     align-items: center;
     justify-content: center;
-    background-color: var(--background-color);
   }
 
+  .loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
 
+  .loaderIcon {
+    font-size: 3rem;
+    color: var(--primary-color);
+    animation: sparkle 2s ease-in-out infinite;
+  }
+
+  @keyframes sparkle {
+    0%, 100% {
+      transform: rotate(0deg) scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: rotate(180deg) scale(1.2);
+      opacity: 0.8;
+    }
+  }
   }
 
 /* using it as global style for larger devices  */

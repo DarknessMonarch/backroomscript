@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useSubscriptionStore } from "@/app/store/SubscriptionStore";
 import { useAuthStore } from "@/app/store/AuthStore";
@@ -19,13 +19,14 @@ import { FaCrown as CrownIcon } from "react-icons/fa";
 export default function MiddleSection() {
   const router = useRouter();
   const { isAuth, currentTier } = useAuthStore();
-  const { 
-    getAllTiers, 
-    getTierLevel,
-    initializePayment, 
-    paymentLoading 
-  } = useSubscriptionStore();
-  
+
+  const tiersObject = useSubscriptionStore((state) => state.tiers);
+  const getTierLevel = useSubscriptionStore((state) => state.getTierLevel);
+  const initializePayment = useSubscriptionStore((state) => state.initializePayment);
+  const paymentLoading = useSubscriptionStore((state) => state.paymentLoading);
+
+  const tiers = useMemo(() => Object.values(tiersObject), [tiersObject]);
+
   const [loadingTier, setLoadingTier] = useState(null);
 
   const features = [
@@ -122,7 +123,6 @@ export default function MiddleSection() {
   return (
     <section className={styles.middleSection}>
       <div className={styles.middleContainer}>
-        {/* How It Works */}
         <div className={styles.howItWorksSection}>
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>Your Glow-Up Journey</h2>
@@ -143,10 +143,9 @@ export default function MiddleSection() {
           </div>
         </div>
 
-        {/* Pricing Section - Now using unified component */}
         <div className={styles.pricingSection}>
           <PricingGrid
-            tiers={getAllTiers()}
+            tiers={tiers}
             currentTier={currentTier}
             onSelectTier={handleSelectTier}
             loading={loadingTier}

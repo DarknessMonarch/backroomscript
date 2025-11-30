@@ -101,14 +101,6 @@ export default function SuccessStorySubmission() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <IoStar className={styles.headerIcon} />
-        <div>
-          <h2>Share Your Success Story</h2>
-          <p>Inspire others by sharing how BackroomScript helped you!</p>
-        </div>
-      </div>
-
       {/* Submission Form */}
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.formGroup}>

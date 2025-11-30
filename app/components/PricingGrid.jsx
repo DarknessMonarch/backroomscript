@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import PricingCard from "./PricingCard";
 import styles from "@/app/style/pricingGrid.module.css";
+import { useSubscriptionStore } from "@/app/store/SubscriptionStore";
 import {
   IoCheckmark as CheckIcon,
   IoShield as ShieldIcon,
@@ -16,8 +18,15 @@ export default function PricingGrid({
   variant = "default", // 'default', 'compact', 'detailed'
   showHeader = true,
   showFooter = true,
-  getTierLevel, // Function to get tier hierarchy level
+  getTierLevel,
 }) {
+  const fetchPricing = useSubscriptionStore((state) => state.fetchPricing);
+
+  // Fetch pricing on mount - runs once per component instance
+  useEffect(() => {
+    fetchPricing();
+  }, [fetchPricing]);
+
   const isPopular = (tierId) => tierId === "pro";
   const isCurrent = (tierId) => currentTier === tierId;
   const isLocked = (tierId) => {
@@ -60,8 +69,8 @@ export default function PricingGrid({
           <div className={styles.badge}>
             <ShieldIcon />
             <div>
-              <strong>30-Day Money-Back Guarantee</strong>
-              <p>Not satisfied? Get a full refund, no questions asked.</p>
+              <strong>Trusted Service</strong>
+              <p>Reliable and secure service with dedicated support.</p>
             </div>
           </div>
           <div className={styles.badge}>

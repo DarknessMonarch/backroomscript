@@ -155,10 +155,10 @@ const organizationSchema = {
   ],
   contactPoint: {
     "@type": "ContactPoint",
-    email: "support@backroomscript.com",
+    email: "backroomscript@gmail.com",
     contactType: "Customer Support",
     url: SITE_URL,
-    telephone: "+254796620365",
+    telephone: "+447401012610",
     areaServed: "Worldwide",
     availableLanguage: "English",
   },
@@ -179,7 +179,7 @@ const organizationSchema = {
             "@type": "Offer",
             itemOffered: {
               "@type": "Product",
-              name: "15+ Conversation Starters & Basic Framework",
+              name: "1 Conversation Starters & Basic Templates",
             },
           },
         ],
@@ -192,7 +192,7 @@ const organizationSchema = {
             "@type": "Offer",
             itemOffered: {
               "@type": "Product",
-              name: "50+ Templates, Advanced Techniques & Community Access",
+              name: "20 Templates, Advanced flirting techniques, Community Access among others",
             },
           },
         ],
@@ -205,7 +205,7 @@ const organizationSchema = {
             "@type": "Offer",
             itemOffered: {
               "@type": "Product",
-              name: "100+ Expert Templates, 1-on-1 Coaching & VIP Support",
+              name: "Unlimited Expert templates, 1-on-1 coaching session (60min), among others",
             },
           },
         ],

@@ -11,7 +11,6 @@ import {
 } from "react-icons/md";
 import { IoStar as StarIcon } from "react-icons/io5";
 
-// Helper function to generate avatar initials from username
 const generateAvatar = (username) => {
   if (!username) return "U";
   const words = username.trim().split(" ");
@@ -21,7 +20,6 @@ const generateAvatar = (username) => {
   return username.slice(0, 2).toUpperCase();
 };
 
-// Helper function to format tier as role
 const formatTierRole = (tier) => {
   const tierRoles = {
     starter: "Starter Member",
@@ -31,7 +29,6 @@ const formatTierRole = (tier) => {
   return tierRoles[tier] || "Member";
 };
 
-// Transform success story to testimonial format
 const transformStoryToTestimonial = (story) => {
   return {
     id: story._id,
@@ -62,25 +59,25 @@ const FAQ_DATA = [
     id: 3,
     question: "Is there a free trial available?",
     answer:
-      "While we don't offer a traditional free trial, we provide a 30-day love-it guarantee. If you're not completely satisfied with your purchase, we'll refund you in full - no questions asked.",
+      "Yes! your first tier is free and come with the basic features to help you get started. You can upgrade to a higher tier at any time for additional benefits.",
   },
   {
     id: 4,
     question: "Is technical support available?",
     answer:
-      "Absolutely! All tiers include email support, Radiant Pro includes priority support, and Queen Elite members get direct WhatsApp support. Our team typically responds within 24 hours.",
+      "Absolutely! You can get support from our contact page and also get quick support from our advanced tier. Our support team is available Monday-Friday, 8AM-6PM EAT.",
   },
   {
     id: 5,
     question: "Can I cancel my subscription?",
     answer:
-      "This is a one-time purchase, not a subscription! Once you buy, the templates are yours forever. No recurring charges, no cancellation needed. You own them for life with all future updates included.",
+      "The payment are paid on a monthly basis triggered by you so it's not a cancelable plan.",
   },
   {
     id: 6,
     question: "Is my data secure with BackroomScript?",
     answer:
-      "Yes! We take your privacy seriously. All content is watermarked for your protection only. We never share your data with third parties, and all payments are processed through secure, encrypted channels.",
+      "Yes! We take your privacy seriously. All content is heavily protected and payment is procesed by paystack and not us so it's very secure.",
   },
 ];
 
@@ -94,7 +91,6 @@ export default function TestimonialsAndFAQ() {
 
   const gridRef = useRef(null);
 
-  // Fetch approved success stories on component mount
   useEffect(() => {
     const fetchStories = async () => {
       await getApprovedStories(20); // Fetch up to 20 approved stories
@@ -102,7 +98,6 @@ export default function TestimonialsAndFAQ() {
     fetchStories();
   }, [getApprovedStories]);
 
-  // Transform success stories to testimonials format
   useEffect(() => {
     if (approvedStories && approvedStories.length > 0) {
       const transformedFeedbacks = approvedStories.map(transformStoryToTestimonial);

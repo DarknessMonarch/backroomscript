@@ -92,10 +92,9 @@
   -webkit-backdrop-filter: var(--blur-sm);
 }
 
-/* Popular Badge */
 .popularBadge {
   position: absolute;
-  top: -14px;
+  top: -6px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -104,9 +103,9 @@
   padding: var(--spacing-xs) var(--spacing-lg);
   background: var(--gradient-primary);
   color: var(--light-color);
-  border-radius: var(--radius-full);
+  border-radius: 0 0 var(--radius-md) var(--radius-md) ;
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-semibold);
   letter-spacing: var(--letter-spacing-wide);
   box-shadow: var(--glass-shadow-pink);
   white-space: nowrap;
@@ -117,10 +116,9 @@
   font-size: 0.875rem;
 }
 
-/* Current Plan Badge */
 .currentBadge {
   position: absolute;
-  top: -14px;
+  top: -6px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -129,11 +127,11 @@
   padding: var(--spacing-xs) var(--spacing-lg);
   background: var(--gradient-primary);
   color: var(--light-color);
-  border-radius: var(--radius-full);
+  border-radius: 0 0 var(--radius-md) var(--radius-md) ;
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-semibold);
   letter-spacing: var(--letter-spacing-wide);
-  box-shadow: var(--glass-shadow-purple);
+  box-shadow: var(--glass-shadow-pink);
   white-space: nowrap;
   z-index: 10;
 }

@@ -3,10 +3,14 @@
   border-radius: var(--radius-circle);
   overflow: hidden;
   cursor: pointer;
-  border: 3px solid rgba(236, 72, 153, 0.2);
+  font-size: 1rem;
   background: var(--gradient-primary);
   transition: all 0.3s ease;
   flex-shrink: 0;
+ width: 44px;
+  height: 44px;
+  border: var(--glass-border-pink);
+
 }
 
 .avatarWrapper:hover .avatarOverlay {
@@ -16,23 +20,6 @@
 .avatarWrapper.locked {
   cursor: not-allowed;
   opacity: 0.7;
-}
-
-.small {
-  width: 40px;
-  height: 40px;
-  border-width: 2px;
-}
-
-.medium {
-  width: 56px;
-  height: 56px;
-}
-
-.large {
-  width: 120px;
-  height: 120px;
-  border-width: 4px;
 }
 
 .avatarImage {
@@ -116,8 +103,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .fileInput {

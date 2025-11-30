@@ -6,6 +6,7 @@ import LogoImage from "@/public/assets/logo.png";
 import styles from "@/app/style/navbar.module.css";
 import { useDrawerStore } from "@/app/store/Drawer";
 import { useAuthStore } from "@/app/store/AuthStore";
+import ProfilePicture from "@/app/components/ProfilePicture";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   useEffect,
@@ -25,7 +26,6 @@ import {
 } from "react-icons/io5";
 import { CgMenuGridO as MenuIcon } from "react-icons/cg";
 import { MdLogout as LogoutIcon } from "react-icons/md";
-import { FaCrown as CrownIcon } from "react-icons/fa";
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -59,9 +59,9 @@ const useNavLinks = () => {
           label: "Plans",
           hasDropdown: true,
           dropdown: [
-            { name: "Starter Glow", href: "/tiers/starter" },
-            { name: "Radiant Pro", href: "/tiers/pro" },
-            { name: "Queen Elite", href: "/tiers/elite" },
+            { name: "Starter Glow", href: "/tiers" },
+            { name: "Radiant Pro", href: "/tiers" },
+            { name: "Queen Elite", href: "/tiers" },
           ],
           title: "Choose Your Glow Level",
           description: "One-time investment in yourself. Lifetime confidence.",
@@ -363,6 +363,7 @@ const LogoSection = ({ onLogoClick }) => (
 const RightSection = ({
   isAuth,
   username,
+  currentTier,
   onLogout,
   isLoggingOut,
   isMobile,
@@ -370,12 +371,7 @@ const RightSection = ({
   <div className={styles.rightSection}>
     {isAuth ? (
       <div className={styles.userSection}>
-        <div className={styles.userInfo}>
-          <div className={styles.userAvatar}>
-            <CrownIcon className={styles.crownIcon} />
-          </div>
-          <span className={styles.username}>{username || "Queen"}</span>
-        </div>
+          <ProfilePicture />
         <button
           onClick={onLogout}
           className={styles.logoutButton}
@@ -422,7 +418,7 @@ const NavbarContent = () => {
   const searchParams = useSearchParams();
 
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const { isAuth, username, logout } = useAuthStore();
+  const { isAuth, username, currentTier, logout } = useAuthStore();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLinkClick = useCallback(() => {
@@ -511,6 +507,7 @@ const NavbarContent = () => {
             <RightSection
               isAuth={isAuth}
               username={username}
+              currentTier={currentTier}
               onLogout={handleLogout}
               isLoggingOut={isLoggingOut}
               isMobile={isMobile}

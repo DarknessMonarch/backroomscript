@@ -87,7 +87,7 @@ export default function About() {
       <div className={styles.section}>
         <h2>Getting Started with BackroomScript</h2>
         <p>
-          When choosing your tier at BackroomScript, consider your communication goals, learning style, and budget. We recommend starting with our essential Starter Glow package if you're new to conversation templates, then upgrading to Radiant Pro or Queen Elite as your confidence grows. Our detailed tier descriptions include template examples and success stories to help you make informed decisions. Take advantage of our 30-day love-it guarantee to explore templates risk-free. Remember that investing in communication skills upfront creates lifelong benefits through better relationships and opportunities.
+          When choosing your tier at BackroomScript, consider your communication goals, learning style, and budget. We recommend starting with our essential Starter Glow package if you're new to conversation templates, then upgrading to Radiant Pro or Queen Elite as your confidence grows. Our detailed tier descriptions include template examples and success stories to help you make informed decisions. Remember that investing in communication skills upfront creates lifelong benefits through better relationships and opportunities.
         </p>
       </div>
       <div className={styles.section}>

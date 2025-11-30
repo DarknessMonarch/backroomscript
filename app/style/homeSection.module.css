@@ -1,10 +1,11 @@
 @media screen {
   .homeSection {
     width: 100%;
-    background: var(--light-background-color);
     position: relative;
     overflow: hidden;
     min-height: 100vh;
+    background: var(--light-background-color);
+
   }
 
   .homeSection::before {

@@ -1,6 +1,5 @@
 @media screen {
   * {
-    
     --primary-color: #ec4899;
     --secondary-color: #a855f7;
     --tertiary-color: #f43f5e;
@@ -30,7 +29,7 @@
     --shadow-light: 0 2px 8px rgba(236, 72, 153, 0.1);
     --shadow-medium: 0 4px 16px rgba(236, 72, 153, 0.15);
     --shadow-heavy: 0 8px 32px rgba(236, 72, 153, 0.2);
-    --shadow-inset: inset 0 1px 3px rgba(236, 72, 153, 0.08);
+    --shadow-inset: inset 0 1px 3px rgba(95, 62, 78, 0.08);
     --shadow-glow: 0 0 20px rgba(236, 72, 153, 0.3);
 
     /* Glassmorphism Shadows */
@@ -39,7 +38,7 @@
     --glass-shadow-lg: 0 15px 50px rgba(0, 0, 0, 0.1);
     --glass-shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.15);
     --glass-shadow-hover: 0 15px 50px rgba(0, 0, 0, 0.12);
-    
+
     /* Colored Glass Shadows */
     --glass-shadow-pink: 0 10px 40px rgba(236, 72, 153, 0.3);
     --glass-shadow-pink-hover: 0 15px 50px rgba(236, 72, 153, 0.4);
@@ -50,13 +49,13 @@
     --glass-bg-medium: rgba(255, 255, 255, 0.8);
     --glass-bg-strong: rgba(255, 255, 255, 0.85);
     --glass-bg-subtle: rgba(255, 255, 255, 0.6);
-    
+
     /* Glassmorphism Borders */
     --glass-border-light: 1px solid rgba(255, 255, 255, 0.3);
     --glass-border-medium: 1px solid rgba(255, 255, 255, 0.5);
     --glass-border-pink: 1px solid rgba(236, 72, 153, 0.2);
     --glass-border-pink-hover: 1px solid rgba(236, 72, 153, 0.4);
-    
+
     /* Backdrop Blur Values */
     --blur-sm: blur(10px);
     --blur-md: blur(20px);
@@ -65,8 +64,18 @@
 
     /* Gradient Backgrounds */
     --gradient-primary: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
-    --gradient-secondary: linear-gradient(135deg, #ec4899 0%, #a855f7 50%, #8b5cf6 100%);
-    --gradient-soft: linear-gradient(135deg, #faf5ff 0%, #fef3f8 50%, #f0f9ff 100%);
+    --gradient-secondary: linear-gradient(
+      135deg,
+      #ec4899 0%,
+      #a855f7 50%,
+      #8b5cf6 100%
+    );
+    --gradient-soft: linear-gradient(
+      135deg,
+      #faf5ff 0%,
+      #fef3f8 50%,
+      #f0f9ff 100%
+    );
     --gradient-text: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
     --gradient-avatar: linear-gradient(135deg, #fce7f3 0%, #e0e7ff 100%);
 
@@ -116,7 +125,7 @@
     --transition-normal: 0.3s ease;
     --transition-slow: 0.5s ease;
     --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
+
     /* Letter Spacing */
     --letter-spacing-tight: -0.02em;
     --letter-spacing-normal: -0.01em;
@@ -130,7 +139,7 @@
   body {
     font-family: var(--font-family-primary);
     font-weight: var(--font-weight-regular);
-    background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #f3e8ff 100%);
+    background: var(--glass-bg-strong);
     background-attachment: fixed;
     color: var(--dark-color);
     line-height: 1.6;

@@ -8,12 +8,19 @@ import styles from "@/app/style/footer.module.css";
 import MasterCard from "@/public/assets/masterCard.png";
 import AirtelMoney from "@/public/assets/airtelMoney.png";
 
-import { MdEmail as EmailIcon, MdLocationOn as LocationIcon } from "react-icons/md";
+import {
+  MdEmail as EmailIcon,
+  MdLocationOn as LocationIcon,
+} from "react-icons/md";
 import { IoCall as PhoneIcon } from "react-icons/io5";
-import { FaApple as AppleIcon, FaTelegram as TelegramIcon } from "react-icons/fa";
+import {
+  FaApple as AppleIcon,
+  FaTelegram as TelegramIcon,
+} from "react-icons/fa";
 import { FaTiktok as TiktokIcon } from "react-icons/fa6";
 import { BsInstagram as InstagramIcon } from "react-icons/bs";
 import { IoLogoGooglePlaystore as PlaystoreIcon } from "react-icons/io5";
+import { IoShieldCheckmark as ShieldIcon } from "react-icons/io5";
 
 export default function Footer() {
   const handleInstagramClick = () => {
@@ -36,8 +43,8 @@ export default function Footer() {
           <div className={styles.newsletterText}>
             <h3>Join Our Confidence Community</h3>
             <p>
-              Stay connected with BackroomScript! Get exclusive templates, confidence tips, 
-              and success stories delivered to your inbox. Subscribe to our newsletter today.
+              Stay connected with BackroomScript! by Subscribing to our
+              newsletter today to get updates and news early
             </p>
           </div>
           <div className={styles.newsletterForm}>
@@ -134,34 +141,35 @@ export default function Footer() {
           <div className={styles.footerSection}>
             <h4>Get in Touch</h4>
             <p className={styles.appDescription}>
-              Join thousands of women who've transformed their communication confidence
+              Join thousands of women who've transformed their communication
+              confidence
             </p>
             <div className={styles.contactInfo}>
               <div className={styles.contactItem}>
                 <LocationIcon className={styles.contactIcon} />
-                <span>Nairobi, Kenya</span>
+                <span>United Kingdom</span>
               </div>
               <div className={styles.contactItem}>
                 <PhoneIcon className={styles.contactIcon} />
-                <span>(+254) 796-620-365</span>
+                <span>(+44) 7401-012-610</span>
               </div>
               <div className={styles.contactItem}>
                 <EmailIcon className={styles.contactIcon} />
-                <span>support@backroomscript.com</span>
+                <span>backroomscript@gmail.com</span>
               </div>
             </div>
             <div className={styles.appButtons}>
               <button className={styles.appButton}>
                 <PlaystoreIcon className={styles.appIcon} />
                 <div>
-                  <span>Get it on</span>
+                  <span>Comming soon</span>
                   <strong>Google Play</strong>
                 </div>
               </button>
               <button className={styles.appButton}>
                 <AppleIcon className={styles.appIcon} />
                 <div>
-                  <span>Download on the</span>
+                  <span>Comming soon</span>
                   <strong>App Store</strong>
                 </div>
               </button>
@@ -170,55 +178,57 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Payment Gateway Section */}
-      <div className={styles.paymentSection}>
-        <div className={styles.paymentContent}>
-          <h4>Secure Payment Options</h4>
-          <div className={styles.paymentIcons}>
-            <div className={styles.paymentIcon}>
-              <Image
-                src={MasterCard}
-                alt="Mastercard"
-                width={50}
-                height={32}
-                style={{ objectFit: "contain" }}
-              />
+      {/* Combined Payment & Copyright Section */}
+      <div className={styles.footerBottomSection}>
+        <div className={styles.footerBottomContainer}>
+          <div className={styles.paymentArea}>
+            <div className={styles.securePaymentHeader}>
+              <ShieldIcon className={styles.shieldIcon} />
+              <span>Secure Payment Methods</span>
             </div>
-            <div className={styles.paymentIcon}>
-              <Image
-                src={VisaCard}
-                alt="Visa"
-                width={50}
-                height={32}
-                style={{ objectFit: "contain" }}
-              />
-            </div>
-            <div className={styles.paymentIcon}>
-              <Image
-                src={MpesaLogo}
-                alt="M-Pesa"
-                width={50}
-                height={32}
-                style={{ objectFit: "contain" }}
-              />
-            </div>
-            <div className={styles.paymentIcon}>
-              <Image
-                src={AirtelMoney}
-                alt="Airtel Money"
-                width={50}
-                height={32}
-                style={{ objectFit: "contain" }}
-              />
+            <div className={styles.paymentLogos}>
+              <div className={styles.paymentLogo}>
+                <Image
+                  src={MasterCard}
+                  alt="Mastercard"
+                  width={45}
+                  height={28}
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
+              <div className={styles.paymentLogo}>
+                <Image
+                  src={VisaCard}
+                  alt="Visa"
+                  width={45}
+                  height={28}
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
+              <div className={styles.paymentLogo}>
+                <Image
+                  src={MpesaLogo}
+                  alt="M-Pesa"
+                  width={45}
+                  height={28}
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
+              <div className={styles.paymentLogo}>
+                <Image
+                  src={AirtelMoney}
+                  alt="Airtel Money"
+                  width={45}
+                  height={28}
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Footer Bottom */}
-      <div className={styles.footerBottom}>
-        <div className={styles.footerBottomContent}>
-          <p>&copy; 2025 BackroomScript. All rights reserved.</p>
+          <div className={styles.copyrightArea}>
+            <p>&copy; 2025 BackroomScript. All rights reserved.</p>
+          </div>
         </div>
       </div>
     </footer>
