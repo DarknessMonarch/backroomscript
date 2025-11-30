@@ -101,7 +101,7 @@ export default function PricingCard({
           </span>
         </div>
         {tier.price > 0 && variant !== "compact" && (
-          <span className={styles.priceNote}>one-time payment</span>
+          <span className={styles.priceNote}>Monthly payment</span>
         )}
       </div>
 
