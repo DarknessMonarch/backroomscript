@@ -11,11 +11,10 @@ import { toast } from "sonner";
 import Sidebar from "@/app/components/Sidebar";
 import TemplateCard from "@/app/components/TemplateCard";
 import TemplateModal from "@/app/components/TemplateModal";
-import UpgradeModal from "@/app/components/UpgradeModal";
+import PricingGrid from "@/app/components/PricingGrid";
 import CoachingSection from "@/app/components/CoachingSection";
 import SuccessStorySubmission from "@/app/components/SuccessStorySubmission";
 
-// Styles
 import styles from "@/app/style/dashboard.module.css";
 
 // Icons
@@ -33,7 +32,6 @@ import {
   IoCalendar,
 } from "react-icons/io5";
 
-// ==================== UTILITY COMPONENTS ====================
 
 const EmptyState = ({ icon: Icon, title, description }) => (
   <div className={styles.emptyState}>
@@ -52,7 +50,6 @@ const LoadingState = ({ message = "Loading..." }) => (
   </div>
 );
 
-// ==================== MAIN COMPONENT ====================
 
 export default function Dashboard() {
   const router = useRouter();
@@ -96,7 +93,6 @@ export default function Dashboard() {
 
   const currentTierInfo = getTierInfo(currentTier);
 
-  // ==================== DATA & CONFIGURATION ====================
 
   const categories = [
     { id: "all", label: "All Templates", icon: IoSparkles },
@@ -122,7 +118,6 @@ export default function Dashboard() {
     "success-stories": "Share your success story and inspire others",
   };
 
-  // ==================== EFFECTS ====================
 
   useEffect(() => {
     initializeAuth();
@@ -149,7 +144,6 @@ export default function Dashboard() {
     }
   }, [isAuth, isInitialized, router, searchParams, verificationComplete]);
 
-  // ==================== HANDLERS ====================
 
   const handlePaymentVerification = async (reference, status) => {
     if (status === "cancelled") {
@@ -260,7 +254,6 @@ export default function Dashboard() {
     }
   };
 
-  // ==================== COMPUTED VALUES ====================
 
   const filteredTemplates = (templates || []).filter((template) => {
     const matchesCategory =
@@ -271,7 +264,6 @@ export default function Dashboard() {
     return matchesCategory && matchesSearch;
   });
 
-  // ==================== LOADING STATES ====================
 
   if (!isInitialized) {
     return <LoadingState message="Initializing..." />;
@@ -284,8 +276,6 @@ export default function Dashboard() {
   if (templatesLoading && !templates.length && !verificationComplete) {
     return <LoadingState message="Loading your dashboard..." />;
   }
-
-  // ==================== RENDER ====================
 
   return (
     <div className={styles.dashboardContainer}>
@@ -479,15 +469,32 @@ export default function Dashboard() {
 
       {/* Upgrade Modal */}
       {showUpgradeModal && (
-        <UpgradeModal
-          currentTier={currentTier}
-          tiers={tiers}
-          getTierLevel={getTierLevel}
-          onUpgrade={handleUpgrade}
-          onClose={() => setShowUpgradeModal(false)}
-          paymentLoading={paymentLoading}
-          upgradingToTier={upgradingToTier}
-        />
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setShowUpgradeModal(false)}
+        >
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className={styles.modalClose}
+              onClick={() => setShowUpgradeModal(false)}
+            >
+              <IoClose />
+            </button>
+            <PricingGrid
+              tiers={tiers}
+              currentTier={currentTier}
+              onSelectTier={handleUpgrade}
+              loading={upgradingToTier}
+              variant="compact"
+              showHeader={true}
+              showFooter={false}
+              getTierLevel={getTierLevel}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

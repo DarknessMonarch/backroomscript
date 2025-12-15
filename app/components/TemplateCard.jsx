@@ -5,6 +5,7 @@ import {
   IoLockClosed,
   IoBookmark,
   IoBookmarkOutline,
+  IoArrowForward,
 } from "react-icons/io5";
 import { toast } from "sonner";
 
@@ -26,13 +27,6 @@ export default function TemplateCard({
       className={`${styles.templateCard} ${isLocked ? styles.templateCardLocked : ""}`}
       onClick={() => onTemplateClick(template)}
     >
-      {isLocked && (
-        <div className={styles.premiumBadge}>
-          <IoLockClosed />
-          <span>{template.tier === "pro" ? "Pro" : "Elite"}</span>
-        </div>
-      )}
-      
       <div className={styles.templateHeader}>
         <h3>{template.title}</h3>
         {!currentTierInfo.limits.bookmarks ? (
@@ -66,10 +60,22 @@ export default function TemplateCard({
       <p className={styles.templateDescription}>{template.description}</p>
 
       <div className={styles.templateFooter}>
-        <span className={styles.templateCategory}>{template.category}</span>
-        <span className={styles.templateReads}>
-          {template.reads || 0} views
-        </span>
+        <div className={styles.templateMeta}>
+          <span className={styles.templateCategory}>{template.category}</span>
+          {isLocked && (
+            <span className={styles.tierBadge}>
+              <IoLockClosed />
+              {template.tier === "pro" ? "Pro" : "Elite"}
+            </span>
+          )}
+        </div>
+        <div className={styles.templateActions}>
+          {!isLocked && (
+            <span className={styles.readButton}>
+              Read <IoArrowForward />
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );
